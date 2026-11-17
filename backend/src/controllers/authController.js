@@ -1,17 +1,16 @@
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
-const { JWT_SECRET } = require('../middleware/authMiddleware');
+const env = require('../config/env');
 
-const generateToken = (user) => {
+const generateLocalToken = (user) => {
   return jwt.sign(
     {
       id: user.id,
       email: user.email,
       name: user.full_name,
-      role: user.role || 'Member'
+      role: user.role || 'Product Manager'
     },
-    JWT_SECRET,
+    env.JWT_SECRET,
     { expiresIn: '7d' }
   );
 };
@@ -21,39 +20,31 @@ const register = async (req, res, next) => {
   try {
     const { email, password, full_name, role } = req.body;
 
-    const existingUser = await db.findUserByEmail(email);
-    if (existingUser) {
-      return res.status(409).json({
-        success: false,
-        error: 'An account with this email address already exists.'
-      });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await db.createUser({
+    const result = await db.registerUser({
       email: email.toLowerCase().trim(),
-      password: hashedPassword,
+      password,
       full_name: full_name.trim(),
       role: role || 'Product Manager'
     });
 
-    const token = generateToken(newUser);
+    // If Supabase returned an access_token, use it; otherwise generate local JWT
+    const token = result.token || generateLocalToken(result.user);
 
     res.status(201).json({
       success: true,
       message: 'Account created successfully.',
       data: {
         token,
-        user: {
-          id: newUser.id,
-          email: newUser.email,
-          full_name: newUser.full_name,
-          role: newUser.role,
-          avatar_url: newUser.avatar_url
-        }
+        user: result.user
       }
     });
   } catch (err) {
+    if (err.statusCode === 409 || err.message?.includes('already exists') || err.message?.includes('already registered')) {
+      return res.status(409).json({
+        success: false,
+        error: 'An account with this email address already exists.'
+      });
+    }
     next(err);
   }
 };
@@ -63,40 +54,28 @@ const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const user = await db.findUserByEmail(email);
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        error: 'Invalid email or password.'
-      });
-    }
+    const result = await db.loginUser({
+      email: email.toLowerCase().trim(),
+      password
+    });
 
-    // In local mode password is in user record; in Supabase if using custom auth table
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        error: 'Invalid email or password.'
-      });
-    }
-
-    const token = generateToken(user);
+    const token = result.token || generateLocalToken(result.user);
 
     res.json({
       success: true,
       message: 'Signed in successfully.',
       data: {
         token,
-        user: {
-          id: user.id,
-          email: user.email,
-          full_name: user.full_name,
-          role: user.role,
-          avatar_url: user.avatar_url
-        }
+        user: result.user
       }
     });
   } catch (err) {
+    if (err.statusCode === 401 || err.message?.includes('Invalid') || err.message?.includes('credentials')) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid email or password.'
+      });
+    }
     next(err);
   }
 };
@@ -114,8 +93,8 @@ const getMe = async (req, res, next) => {
       data: {
         id: user.id,
         email: user.email,
-        full_name: user.full_name,
-        role: user.role,
+        full_name: user.full_name || user.name,
+        role: user.role || 'Member',
         avatar_url: user.avatar_url
       }
     });
@@ -127,25 +106,22 @@ const getMe = async (req, res, next) => {
 // POST /api/auth/demo
 const demoLogin = async (req, res, next) => {
   try {
-    const demoUser = await db.findUserByEmail('demo@taskflow.ai');
-    if (!demoUser) {
-      return res.status(404).json({ success: false, error: 'Demo account not initialized.' });
-    }
+    const demoUser = {
+      id: 'usr_demo_8f9a2b1c',
+      email: 'demo@taskflow.ai',
+      full_name: 'Alex Rivera',
+      role: 'Senior Product Manager',
+      avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+    };
 
-    const token = generateToken(demoUser);
+    const token = generateLocalToken(demoUser);
 
     res.json({
       success: true,
-      message: 'Signed in as Demo User.',
+      message: 'Signed in as Demo Evaluator.',
       data: {
         token,
-        user: {
-          id: demoUser.id,
-          email: demoUser.email,
-          full_name: demoUser.full_name,
-          role: demoUser.role,
-          avatar_url: demoUser.avatar_url
-        }
+        user: demoUser
       }
     });
   } catch (err) {

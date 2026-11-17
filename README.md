@@ -242,6 +242,28 @@ All protected endpoints require `Authorization: Bearer <JWT_TOKEN>` header.
 
 ---
 
+## 🧪 Automated Testing
+
+The backend includes a comprehensive test suite covering authentication, field allowlists, task CRUD, and AI features.
+
+Run all automated tests with:
+```bash
+npm test
+```
+Or directly within the backend directory:
+```bash
+cd backend
+npm test
+```
+
+### Test Coverage Highlights:
+- **Authentication**: Registration validation, duplicate email rejection (409), password hashing, demo login, JWT issuance and 401 unauthorized checks.
+- **Task CRUD & Field Allowlist Security**: Task creation, schema validation, status transitions, and protection against malicious `user_id` reassignments (403 Forbidden).
+- **AI Engine**: Specification generator, smart priority score computation (1-100), and daily standup synthesis.
+- **Healthcheck & Security**: Live database connectivity verification and CORS allowlist enforcement.
+
+---
+
 ## 🎯 Evaluation Criteria Mapping
 
 | Evaluation Criteria | Implementation Evidence in TaskFlow AI |

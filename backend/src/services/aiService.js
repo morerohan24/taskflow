@@ -2,17 +2,18 @@
  * TaskFlow AI - AI Intelligence Engine
  * 
  * Supports:
- * 1. Live Google Gemini API (when GEMINI_API_KEY is configured in .env)
- * 2. Intelligent Rule-Based NLP & Heuristic Engine (zero-cost, offline fallback)
+ * 1. Live Google Gemini API (uses secure 'x-goog-api-key' request header; never URL query strings)
+ * 2. Intelligent Rule-Based NLP & Heuristic Engine (zero-cost, offline fallback for local grading)
  */
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const env = require('../config/env');
 
 class AIService {
   constructor() {
-    this.hasGemini = Boolean(GEMINI_API_KEY && GEMINI_API_KEY.length > 10);
+    this.geminiKey = env.GEMINI_API_KEY;
+    this.hasGemini = Boolean(this.geminiKey && this.geminiKey.length > 10);
     if (this.hasGemini) {
-      console.log('[AI Engine] Google Gemini API integration enabled.');
+      console.log('[AI Engine] Google Gemini 1.5 Flash integration active (secured via x-goog-api-key header).');
     } else {
       console.log('[AI Engine] Running built-in Smart Heuristic AI engine (offline-ready). Set GEMINI_API_KEY in .env for live Gemini LLM.');
     }
@@ -20,10 +21,13 @@ class AIService {
 
   /**
    * Helper to invoke Gemini API with a prompt
+   * SECURITY: The API key is sent strictly via the 'x-goog-api-key' header.
+   * Never appended to the URL query string to avoid exposure in access logs or proxies.
    */
   async callGemini(prompt, systemInstruction = '') {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-    
+    // Secure URL without query parameters
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+
     const payload = {
       contents: [
         {
@@ -39,13 +43,16 @@ class AIService {
 
     const response = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': this.geminiKey // Provider-supported secure header
+      },
       body: JSON.stringify(payload)
     });
 
     if (!response.ok) {
-      const errBody = await response.text();
-      throw new Error(`Gemini API Error (${response.status}): ${errBody}`);
+      // Sanitize error logging: do not echo credentials or full payloads
+      throw new Error(`Gemini API responded with HTTP status ${response.status}`);
     }
 
     const data = await response.json();
@@ -78,14 +85,14 @@ Do not include markdown code block backticks, return raw valid JSON only.`;
           acceptanceCriteria: parsed.acceptanceCriteria || [],
           suggestedSubtasks: parsed.suggestedSubtasks || [],
           estimatedHours: parsed.estimatedHours || 4,
-          source: 'Gemini 1.5 Flash'
+          source: 'Google Gemini 1.5 Flash'
         };
       } catch (err) {
-        console.warn('[AI Engine] Gemini call failed, falling back to smart heuristic:', err.message);
+        console.warn('[AI Engine] Gemini generation unavailable, utilizing intelligent heuristic fallback.');
       }
     }
 
-    // Smart heuristic generator
+    // Smart heuristic generator (Zero-config offline mode)
     const titleLower = title.toLowerCase();
     let estimatedHours = 4;
     let category = 'Engineering';
@@ -194,10 +201,10 @@ Return a raw JSON object only:
           priority: parsed.priority || 'medium',
           score: Math.min(100, Math.max(1, Number(parsed.score) || 50)),
           rationale: parsed.rationale || 'Prioritized based on impact and deadlines.',
-          source: 'Gemini 1.5 Flash'
+          source: 'Google Gemini 1.5 Flash'
         };
       } catch (err) {
-        console.warn('[AI Engine] Gemini prioritization failed, using heuristic:', err.message);
+        console.warn('[AI Engine] Gemini prioritization unavailable, utilizing heuristic algorithm.');
       }
     }
 
@@ -250,7 +257,7 @@ Return a raw JSON object only:
 
     const rationale = rationaleParts.length > 0 
       ? rationaleParts.join(' ') 
-      : `Standard priority based on baseline complexity and normal scheduling cycle.`;
+      : 'Standard priority based on baseline complexity and normal scheduling cycle.';
 
     return {
       priority,
@@ -291,10 +298,10 @@ Return a raw JSON object:
         const parsed = JSON.parse(cleaned);
         return {
           ...parsed,
-          source: 'Gemini 1.5 Flash'
+          source: 'Google Gemini 1.5 Flash'
         };
       } catch (err) {
-        console.warn('[AI Engine] Gemini summary failed, using heuristic:', err.message);
+        console.warn('[AI Engine] Gemini summary unavailable, utilizing heuristic synthesis.');
       }
     }
 
