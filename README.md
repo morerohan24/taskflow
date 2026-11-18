@@ -1,22 +1,17 @@
 # TaskFlow AI - AI-Powered Task Management SaaS
 
-> **Internship Assignment Submission: Build a Mini SaaS / Product Workflow**  
-> **Tech Stack:** React.js • Node.js / Express.js • Supabase (PostgreSQL) • Tailwind CSS • Google Gemini AI
-
----
-
-## 🌟 Executive Summary
+##  Executive Summary
 
 **TaskFlow AI** is a production-grade, full-stack productivity SaaS designed to streamline modern engineering and product workflows. It merges a responsive Kanban board with autonomous AI capabilities—such as automated task specification generation, predictive priority scoring (1-100), and daily standup synthesis—backed by multi-tenant PostgreSQL security via Supabase Row-Level Security (RLS).
 
 ### Key Highlights
-- ⚡ **Zero-Configuration Ready**: Evaluators can clone and run `npm run dev` immediately. Includes a built-in instant local storage engine pre-seeded with realistic SaaS tasks, projects, and a 1-click **"Instant Demo Sign In"** button.
-- 🗄️ **Supabase Cloud Native**: Ready-to-execute `supabase_schema.sql` script with custom PostgreSQL enums, triggers, indexes, and tenant-isolated Row Level Security (RLS) policies.
-- 🤖 **Autonomous AI Engine**: Dual-mode AI system supporting live **Google Gemini 1.5 Flash** with an offline heuristic NLP engine fallback.
+-  **Zero-Configuration Ready**: Evaluators can clone and run `npm run dev` immediately. Includes a built-in instant local storage engine pre-seeded with realistic SaaS tasks, projects, and a 1-click **"Instant Demo Sign In"** button.
+- **Supabase Cloud Native**: Ready-to-execute `supabase_schema.sql` script with custom PostgreSQL enums, triggers, indexes, and tenant-isolated Row Level Security (RLS) policies.
+-  **Autonomous AI Engine**: Dual-mode AI system supporting live **Google Gemini 1.5 Flash** with an offline heuristic NLP engine fallback.
 
 ---
 
-## 📐 System Architecture
+## System Architecture
 
 ```mermaid
 flowchart TD
@@ -52,7 +47,7 @@ flowchart TD
 
 ---
 
-## ✨ Essential Features Breakdown
+## Essential Features Breakdown
 
 ### 1. Frontend – React.js (Vite + Tailwind CSS + Lucide Icons)
 - **Responsive SaaS Dashboard**: Clean dark-mode workspace layout with real-time sprint statistics, urgency radars, and project progress meters.
@@ -83,7 +78,7 @@ flowchart TD
 
 ---
 
-## 📂 Project Directory Structure
+##  Project Directory Structure
 
 ```text
 D:\taskflow-ai\
@@ -150,7 +145,7 @@ D:\taskflow-ai\
 
 ---
 
-## 🚀 Quick Start Guide
+## Quick Start Guide
 
 ### Step 1: Install Dependencies
 Open your terminal in `D:\taskflow-ai`:
@@ -196,25 +191,9 @@ The application runs seamlessly out-of-the-box using the built-in local database
    [Database] Connected to live Supabase project: https://your-project-id.supabase.co
    ```
 
----
 
-## 🤖 Google Gemini AI Configuration (Optional)
 
-TaskFlow AI includes an intelligent offline NLP heuristic engine that works immediately without any API key. To enable live Google Gemini LLM generation:
-
-1. Obtain a free Gemini API key from [Google AI Studio](https://aistudio.google.com/).
-2. In `D:\taskflow-ai\backend\.env`:
-   ```env
-   GEMINI_API_KEY=AIzaSy...your_gemini_key
-   ```
-3. Restart backend. The server will log:
-   ```
-   [AI Engine] Google Gemini API integration enabled.
-   ```
-
----
-
-## 📡 REST API Reference
+## REST API Reference
 
 All protected endpoints require `Authorization: Bearer <JWT_TOKEN>` header.
 
@@ -242,7 +221,7 @@ All protected endpoints require `Authorization: Bearer <JWT_TOKEN>` header.
 
 ---
 
-## 🧪 Automated Testing
+## Automated Testing
 
 The backend includes a comprehensive test suite covering authentication, field allowlists, task CRUD, and AI features.
 
@@ -262,20 +241,3 @@ npm test
 - **AI Engine**: Specification generator, smart priority score computation (1-100), and daily standup synthesis.
 - **Healthcheck & Security**: Live database connectivity verification and CORS allowlist enforcement.
 
----
-
-## 🎯 Evaluation Criteria Mapping
-
-| Evaluation Criteria | Implementation Evidence in TaskFlow AI |
-|---|---|
-| **Full Stack Understanding** | Cohesive communication between React client, Express REST API, and PostgreSQL data layer with JWT token lifecycle management. |
-| **Application Workflow** | Smooth end-to-end user journey: authentication → dashboard summary → drag-and-drop Kanban execution → task modal with AI co-pilot → velocity analytics. |
-| **Frontend Quality** | Built with modern Tailwind CSS, custom glassmorphism, responsive grid/flexbox layouts, Lucide icons, accessible modals, and optimistic UI transitions. |
-| **Backend Architecture** | Modular separation of concerns (`controllers`, `routes`, `middleware`, `services`, `config`), centralized error handling, and robust input validation. |
-| **Database Integration** | Full PostgreSQL schema with foreign keys, custom enums, auto-updating triggers, B-tree indexes, and Row Level Security (RLS) policies. |
-| **Scalability Thinking** | Stateless JWT authentication, optimistic client rendering, modular service abstractions, indexed database queries, and decoupled AI engine. |
-
----
-
-## 📄 License
-This project is open-source under the **MIT License**.

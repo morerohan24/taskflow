@@ -1,8 +1,3 @@
--- ==============================================================================
--- TaskFlow AI - Supabase Database Schema
--- Production-Ready PostgreSQL Schema with Row Level Security (RLS) & Triggers
--- ==============================================================================
-
 -- 1. Enable UUID Extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -164,6 +159,3 @@ CREATE POLICY "Users can delete their own tasks"
     ON public.tasks FOR DELETE
     USING (auth.uid() = user_id);
 
--- ==============================================================================
--- Schema ready! Paste into Supabase SQL Editor and run.
--- ==============================================================================
