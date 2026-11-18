@@ -6,6 +6,7 @@ node_modules/
 .env
 .env.local
 .env.*.local
+.env*
 
 # Build output
 dist/
@@ -31,6 +32,9 @@ Thumbs.db
 *.sqlite3
 local_data.json
 
-
+# Vercel
 .vercel
-.env*
+
+# Document submission files
+*.docx
+*.pdf
