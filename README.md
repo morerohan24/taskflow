@@ -8,7 +8,7 @@
 
 ---
 
-## 🌟 Executive Summary
+##  Executive Summary
 
 **TaskFlow AI** is a production-grade, full-stack productivity SaaS designed to streamline modern engineering and product workflows. It merges a responsive Kanban board with autonomous AI capabilities—such as automated task specification generation, predictive priority scoring (1-100), and daily standup synthesis—backed by multi-tenant PostgreSQL security via Supabase Row-Level Security (RLS).
 
@@ -19,41 +19,7 @@
 
 ---
 
-## System Architecture
 
-```mermaid
-flowchart TD
-    subgraph Client["Frontend Client (React.js + Vite + Tailwind)"]
-        UI[SaaS Dashboard & Kanban Board]
-        AuthCtx[Auth Context & JWT Interceptor]
-        TaskCtx[Task Context with Optimistic Updates]
-        UI --> AuthCtx
-        UI --> TaskCtx
-    end
-
-    subgraph Server["Backend REST API (Node.js + Express.js)"]
-        Router[API Gateway & Express Router]
-        AuthMW[JWT Auth Middleware & Zod Validation]
-        Controllers[Auth, Task, Project, AI, Analytics Controllers]
-        AISvc[AI Intelligence Service]
-        Router --> AuthMW --> Controllers
-        Controllers --> AISvc
-    end
-
-    subgraph DataLayer["Database & AI Services"]
-        SupaDB[(Supabase PostgreSQL / RLS)]
-        LocalDB[(Zero-Config Local Storage Fallback)]
-        Gemini[Google Gemini 1.5 Flash API]
-        AISvc --> Gemini
-        Controllers --> SupaDB
-        Controllers -.->|Fallback| LocalDB
-    end
-
-    TaskCtx -->|REST API over HTTP| Router
-    AuthCtx -->|Bearer Token| Router
-```
-
----
 
 ## Essential Features Breakdown
 
@@ -182,24 +148,6 @@ npm run dev
 
 ---
 
-##  Supabase Cloud Integration (Optional)
-
-The application runs seamlessly out-of-the-box using the built-in local database. To connect a live Supabase PostgreSQL database:
-
-1. Create a free project on [Supabase](https://supabase.com).
-2. Go to the **SQL Editor** tab in Supabase.
-3. Copy the entire contents of [`supabase_schema.sql`](./supabase_schema.sql) and click **Run**.
-4. Open `D:\taskflow-ai\backend\.env` and paste your project credentials:
-   ```env
-   SUPABASE_URL=https://your-project-id.supabase.co
-   SUPABASE_KEY=your_supabase_anon_or_service_role_key
-   ```
-5. Restart the backend. The server will output:
-   ```
-   [Database] Connected to live Supabase project: https://your-project-id.supabase.co
-   ```
-
-
 
 ## REST API Reference
 
@@ -251,30 +199,7 @@ npm test
 
 ---
 
-## ☁️ Deployment on Vercel
 
-The application is pre-configured with a serverless full-stack configuration (`vercel.json` and `api/index.js`) to deploy seamlessly on Vercel with zero configuration:
 
-1. **Push to GitHub**: Code is hosted at `https://github.com/morerohan24/taskflow.git`.
-2. **Import into Vercel**:
-   - Go to [vercel.com/new](https://vercel.com/new) and import `taskflow`.
-   - Vercel automatically detects `vercel.json` (running `npm run build` and routing `/api/*` to the Express serverless function).
-   - Click **Deploy**.
-3. **Environment Variables on Vercel**:
-   - In your Vercel project settings, you can optionally add:
-     - `SUPABASE_URL` (your live Supabase URL)
-     - `SUPABASE_KEY` (your Supabase API key)
-     - `GEMINI_API_KEY` (your Google Gemini API key)
-     - `JWT_SECRET` (your cryptographic JWT secret)
-
----
-
-## 👤 Developer Information
-
-- **Name**: Rohan Sunil More
-- **Role**: Full Stack Development Intern
-- **Project Essence**: **Orchestration**
-- **Repository**: [https://github.com/morerohan24/taskflow.git](https://github.com/morerohan24/taskflow.git)
-- **License**: MIT
 
 
