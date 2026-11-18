@@ -25,7 +25,11 @@ const corsOptions = {
     if (!origin) return callback(null, true);
 
     const normalized = origin.replace(/\/$/, '');
-    if (env.ALLOWED_ORIGINS.includes(normalized)) {
+    if (
+      env.ALLOWED_ORIGINS.includes(normalized) ||
+      normalized.endsWith('.vercel.app') ||
+      Boolean(process.env.VERCEL)
+    ) {
       return callback(null, true);
     }
     return callback(new Error(`Origin ${origin} is blocked by CORS security policy.`));
@@ -110,8 +114,8 @@ app.use('/api/analytics', analyticsRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-// Server Listen (only when not imported by automated test runner)
-if (process.env.NODE_ENV !== 'test') {
+// Server Listen (only when not in automated test or Vercel serverless environment)
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`\n==================================================`);
     console.log(`🚀 TaskFlow AI Backend API running on port ${PORT}`);

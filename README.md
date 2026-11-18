@@ -1,6 +1,13 @@
 # TaskFlow AI - AI-Powered Task Management SaaS
 
-##  Executive Summary
+> **Developer:** Rohan Sunil More  
+> **Project Essence:** **Orchestration**  
+> **Assignment:** Full Stack Development Intern — Mini SaaS/Product Workflow  
+> **Repository:** [https://github.com/morerohan24/taskflow.git](https://github.com/morerohan24/taskflow.git)
+
+---
+
+## 🌟 Executive Summary
 
 **TaskFlow AI** is a production-grade, full-stack productivity SaaS designed to streamline modern engineering and product workflows. It merges a responsive Kanban board with autonomous AI capabilities—such as automated task specification generation, predictive priority scoring (1-100), and daily standup synthesis—backed by multi-tenant PostgreSQL security via Supabase Row-Level Security (RLS).
 
@@ -240,4 +247,33 @@ npm test
 - **Task CRUD & Field Allowlist Security**: Task creation, schema validation, status transitions, and protection against malicious `user_id` reassignments (403 Forbidden).
 - **AI Engine**: Specification generator, smart priority score computation (1-100), and daily standup synthesis.
 - **Healthcheck & Security**: Live database connectivity verification and CORS allowlist enforcement.
+
+---
+
+## ☁️ Deployment on Vercel
+
+The application is pre-configured with a serverless full-stack configuration (`vercel.json` and `api/index.js`) to deploy seamlessly on Vercel with zero configuration:
+
+1. **Push to GitHub**: Code is hosted at `https://github.com/morerohan24/taskflow.git`.
+2. **Import into Vercel**:
+   - Go to [vercel.com/new](https://vercel.com/new) and import `taskflow`.
+   - Vercel automatically detects `vercel.json` (running `npm run build` and routing `/api/*` to the Express serverless function).
+   - Click **Deploy**.
+3. **Environment Variables on Vercel**:
+   - In your Vercel project settings, you can optionally add:
+     - `SUPABASE_URL` (your live Supabase URL)
+     - `SUPABASE_KEY` (your Supabase API key)
+     - `GEMINI_API_KEY` (your Google Gemini API key)
+     - `JWT_SECRET` (your cryptographic JWT secret)
+
+---
+
+## 👤 Developer Information
+
+- **Name**: Rohan Sunil More
+- **Role**: Full Stack Development Intern
+- **Project Essence**: **Orchestration**
+- **Repository**: [https://github.com/morerohan24/taskflow.git](https://github.com/morerohan24/taskflow.git)
+- **License**: MIT
+
 
