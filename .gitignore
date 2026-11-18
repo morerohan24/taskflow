@@ -33,3 +33,4 @@ local_data.json
 
 
 .vercel
+.env*
