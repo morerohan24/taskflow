@@ -31,3 +31,5 @@ Thumbs.db
 *.sqlite3
 local_data.json
 
+
+.vercel

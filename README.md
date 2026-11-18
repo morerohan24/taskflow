@@ -3,7 +3,8 @@
 > **Developer:** Rohan Sunil More  
 > **Project Essence:** **Orchestration**  
 > **Assignment:** Full Stack Development Intern — Mini SaaS/Product Workflow  
-> **Repository:** [https://github.com/morerohan24/taskflow.git](https://github.com/morerohan24/taskflow.git)
+> **Live Demo (Vercel):** [https://taskflow-ai-puce.vercel.app](https://taskflow-ai-puce.vercel.app)  
+> **GitHub Repository:** [https://github.com/morerohan24/taskflow.git](https://github.com/morerohan24/taskflow.git)
 
 ---
 
