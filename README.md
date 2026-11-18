@@ -174,7 +174,7 @@ npm run dev
 
 ---
 
-## 🗄️ Supabase Cloud Integration (Optional)
+##  Supabase Cloud Integration (Optional)
 
 The application runs seamlessly out-of-the-box using the built-in local database. To connect a live Supabase PostgreSQL database:
 
